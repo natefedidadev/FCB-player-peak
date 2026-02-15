@@ -1,0 +1,6 @@
+/matches
+CLAUDE.md
+.claude
+__pycache__/
+cache/
+venv/
