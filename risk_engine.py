@@ -8,17 +8,18 @@ OPPONENT_WEIGHTS = {
     'GOALS': 10,
     'BALL IN THE BOX': 8,
     'CREATING CHANCES': 7,
-    'SET PIECES': 6,
     'BALL IN FINAL THIRD': 5,
     'ATTACKING TRANSITION': 4,
-    'PROGRESSION': 3
+    'PROGRESSION': 3,
+    'SET PIECES': 3
 }
 
 BARCA_WEIGHTS = {
     'DEFENDING IN DEFENSIVE THIRD': 4,
     'DEFENSIVE TRANSITION': 3,
     'DEFENDING IN MIDDLE THIRD': 2,
-    'DEFENDING IN ATTACKING THIRD': 1
+    'DEFENDING IN ATTACKING THIRD': 1,
+    'SET PIECES': 0
 }
 
 # Passing in the raw events dataframe, and we spit out a tuple containing:
@@ -55,7 +56,9 @@ def _compute_raw_scores(time_grid: np.ndarray, events_cleaned: pd.DataFrame,
     # else if for opponent, get the opponent's score
     
     def get_weight(row):
-        if row['Team'] == BARCA_TEAM_NAME:
+        if row['Team'] == 'N/A':
+            return 0
+        elif row['Team'] == BARCA_TEAM_NAME:
             return barca_weights.get(row['code'], 0)
         else:
             return opponent_weights.get(row['code'], 0)
