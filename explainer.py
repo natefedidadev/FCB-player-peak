@@ -2,7 +2,10 @@ import os
 import json
 import hashlib
 from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI
+
+load_dotenv()
 
 # key
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
@@ -29,19 +32,13 @@ def call_llm(prompt: str, system_prompt: str | None = None) -> str:
     # response object has a `choices` list, each choice has a `message` (this is the LLM output)
     return response.choices[0].message.content
 
-# ---------------------------------------------------------------------------
-# Disk caching — never call the API twice for the same prompt
-# ---------------------------------------------------------------------------
-
 CACHE_DIR = Path("cache/explanations")
 
 def _cache_key(prompt: str, system_prompt: str | None) -> str:
-    """Hash the prompt into a short filename-safe key."""
     raw = (system_prompt or "") + "||" + prompt
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 def _get_cached(key: str) -> str | None:
-    """Return cached response if it exists, else None."""
     path = CACHE_DIR / f"{key}.json"
     if path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -49,14 +46,12 @@ def _get_cached(key: str) -> str | None:
     return None
 
 def _save_cache(key: str, prompt: str, response: str) -> None:
-    """Save an LLM response to disk."""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     path = CACHE_DIR / f"{key}.json"
     data = {"prompt": prompt, "response": response}
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 def call_llm_cached(prompt: str, system_prompt: str | None = None) -> str:
-    """call_llm with disk caching. Checks cache first, only hits API on miss."""
     key = _cache_key(prompt, system_prompt)
     cached = _get_cached(key)
     if cached is not None:
@@ -64,10 +59,6 @@ def call_llm_cached(prompt: str, system_prompt: str | None = None) -> str:
     response = call_llm(prompt, system_prompt)
     _save_cache(key, prompt, response)
     return response
-
-# ---------------------------------------------------------------------------
-# System prompt — shared by all explanation types
-# ---------------------------------------------------------------------------
 
 SYSTEM_PROMPT = (
     "You are a football tactical analyst working with FC Barcelona's coaching staff. "
