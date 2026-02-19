@@ -132,22 +132,47 @@ def build_window_prompt(events_in_window: list[dict], window_start: int, window_
 
 def build_pattern_prompt(pattern: dict) -> str:
     seq = " -> ".join(pattern["sequence"])
-    freq = pattern["frequency"]
-    examples = ", ".join(pattern["example_matches"])
+    freq = pattern.get("frequency", "unknown")
+    examples = ", ".join(pattern.get("example_matches", []))
     time_to_goal = pattern.get("avg_time_to_goal")
+
+    # Confidence gating (backend signal; not necessarily shown to coaches)
+    conf = pattern.get("confidence_score", None)
+    tier = pattern.get("confidence_tier", None)
+    threshold = 0.60  # tweakable: "confident enough to call recurring"
+
+    # Decide wording: only call it "recurring" if we have enough confidence
+    if isinstance(conf, (int, float)) and conf >= threshold:
+        recurrence_line = (
+            "This pattern is a **recurring** vulnerability across matches "
+            "(supported by the cross-match analysis)."
+        )
+    else:
+        # Avoid overstating recurrence
+        recurrence_line = (
+            "This pattern appears in the data, but cross-match evidence is **not strong enough** "
+            "to confidently label it recurring yet. Treat it as a candidate theme to monitor."
+        )
+
+    # Optional internal metadata line (useful for logs / dev, can remove anytime)
+    conf_line = ""
+    if isinstance(conf, (int, float)):
+        conf_line = f"\nConfidence (internal): {conf:.2f}" + (f" ({tier})" if tier else "")
 
     time_line = ""
     if time_to_goal is not None:
         time_line = f"\nAverage time from this pattern to goal conceded: {time_to_goal:.0f} seconds"
 
     return (
-        f"Recurring defensive vulnerability pattern detected across multiple matches:\n\n"
+        f"Defensive vulnerability pattern detected:\n\n"
         f"Event sequence: {seq}\n"
         f"Frequency: appeared in {freq}\n"
-        f"Example matches: {examples}{time_line}\n\n"
-        f"Explain why this sequence of events represents a tactical vulnerability. "
-        f"What structural or tactical issue does this pattern reveal, and what "
-        f"adjustments would you recommend to the coaching staff?"
+        f"Example matches: {examples}"
+        f"{time_line}\n\n"
+        f"{recurrence_line}"
+        f"Explain why this sequence represents a tactical vulnerability. "
+        f"What structural or tactical issue does it reveal, and what adjustments "
+        f"would you recommend to the coaching staff?"
     )
 
 def explain_moment(danger_moment: dict, match_name: str, opponent: str,
