@@ -1,3 +1,7 @@
+import { useRef, useEffect } from "react";
+
+const BASE = "http://localhost:8001";
+
 function fmtTime(sec) {
   const m = Math.floor(sec / 60);
   const s = Math.round(sec % 60);
@@ -10,8 +14,28 @@ const SEVERITY_STYLES = {
   moderate: "bg-yellow-500 text-gray-900",
 };
 
-export default function DangerPanel({ danger, onClose }) {
+// Start 8 seconds before the danger window for context
+const PRE_ROLL = 8;
+
+export default function DangerPanel({ danger, onClose, matchIndex, videoOffset = 0 }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!videoRef.current || !danger) return;
+    // window_start is match-relative; add videoOffset to account for pre-kickoff broadcast content
+    const seekTo = Math.max(0, danger.window_start + videoOffset - PRE_ROLL);
+    const video = videoRef.current;
+    const onReady = () => { video.currentTime = seekTo; };
+    if (video.readyState >= 1) {
+      video.currentTime = seekTo;
+    } else {
+      video.addEventListener("loadedmetadata", onReady, { once: true });
+    }
+  }, [danger, videoOffset]);
+
   if (!danger) return null;
+
+  const videoUrl = `${BASE}/api/matches/${matchIndex}/video`;
 
   return (
     <div className="bg-surface rounded-2xl p-6 border border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.3)] overflow-y-auto flex-1">
@@ -57,7 +81,7 @@ export default function DangerPanel({ danger, onClose }) {
         ))}
       </div>
 
-      <div className="mt-5 text-white/80 leading-relaxed whitespace-pre-wrap text-base">
+      <div className="mt-5 text-white/80 leading-relaxed whitespace-pre-wrap text-lg">
         {danger.explanation}
       </div>
 
@@ -66,6 +90,18 @@ export default function DangerPanel({ danger, onClose }) {
           Nexus timestamp: {danger.nexus_timestamp}
         </p>
       )}
+
+      {/* Video player — placed below explanation so judges read analysis first */}
+      <div className="mt-6 rounded-xl overflow-hidden bg-black">
+        <video
+          ref={videoRef}
+          key={`${matchIndex}-${danger.window_start}`}
+          src={videoUrl}
+          controls
+          className="w-full max-h-52"
+          preload="metadata"
+        />
+      </div>
     </div>
   );
 }

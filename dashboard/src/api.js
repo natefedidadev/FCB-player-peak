@@ -1,4 +1,4 @@
-const BASE = "http://localhost:8000";
+const BASE = "http://localhost:8001";
 
 export async function fetchMatches() {
   const res = await fetch(`${BASE}/api/matches`);

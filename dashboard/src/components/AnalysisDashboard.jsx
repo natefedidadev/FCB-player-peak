@@ -114,6 +114,8 @@ export default function AnalysisDashboard() {
                 <DangerPanel
                   danger={selectedDanger}
                   onClose={() => setSelectedDanger(null)}
+                  matchIndex={index}
+                  videoOffset={dangersData.video_pre_match_offset || 0}
                 />
               )}
               {windowStart && windowEnd && (

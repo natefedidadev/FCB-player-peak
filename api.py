@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import numpy as np
 import os
+import glob as glob_module
 
 from data_loader import list_matches, load_events, get_halftime_offset
 from risk_engine import compute_risk_score
@@ -15,13 +16,29 @@ app = FastAPI(title="FCB Defensive Risk Analysis")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"],
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Range", "Accept-Ranges", "Content-Length"],
 )
 
 # In-memory cache: avoid recomputing risk scores on every request
 _cache = {}
+
+# Seconds of pre-kickoff broadcast content per match video (user-measured)
+VIDEO_PRE_MATCH_OFFSETS = {
+    0: 105,   # AC Milan - Barça (0-1)
+    1: 280,   # Arsenal - Barça (5-3)
+    2: 305,   # Barça - AC Milan (2-2)
+    3: 682,   # Barça - AS Mònaco (0-3)
+    4: 634,   # Barça - Como 1907 (5-0)
+    5: 284,   # Barça - Manchester City (2-2)
+    6: 123,   # Barça - Reial Madrid (3-0)
+    7: 459,   # Daegu FC - Barça (0-5)
+    8: 927,   # FC Seül - Barça (3-7)
+    9: 283,   # Reial Madrid - Barça (1-2)
+    10: 590,  # Vissel Kobe - Barça (1-3)
+}
 
 def _get_match_data(index: int):
     if index not in _cache:
@@ -123,7 +140,23 @@ def get_dangers(index: int):
             "explanation": explanation,
         })
 
-    return {"match_name": match_name, "opponent": opponent, "dangers": results}
+    video_offset = VIDEO_PRE_MATCH_OFFSETS.get(index, 0)
+    return {"match_name": match_name, "opponent": opponent, "dangers": results, "video_pre_match_offset": video_offset}
+
+
+@app.get("/api/matches/{index}/video")
+async def get_video(index: int):
+    matches = list_matches()
+    if index < 0 or index >= len(matches):
+        raise HTTPException(404, "Match not found")
+
+    match_name = matches[index]
+    match_dir = os.path.join("matches", match_name)
+    mp4_files = glob_module.glob(os.path.join(match_dir, "*.mp4"))
+    if not mp4_files:
+        raise HTTPException(404, "No video found for this match")
+
+    return FileResponse(mp4_files[0], media_type="video/mp4")
 
 
 class WindowRequest(BaseModel):
