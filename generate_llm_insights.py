@@ -36,7 +36,12 @@ def main():
         events_df = load_events(match_name)
         risk_df = compute_risk_score(events_df)
 
-        dangers = detect_danger_moments(risk_df, events_df)
+        dangers = detect_danger_moments(
+            risk_df,
+            events_df,
+            debug=True,
+            match_name=match_name
+        )
         dangers = dangers[:3]   # REMOVE THIS LATER PELEEASDFJAELIFJAEKJFLE
 
         # Infer opponent name from match string; fallback to "Opponent"

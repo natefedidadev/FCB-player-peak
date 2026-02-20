@@ -181,7 +181,7 @@
       "window_end": 2498,
       "peak_score": 100.0,
       "severity": "critical",
-      "resulted_in_goal": true,
+      "resulted_in_goal": false,
       "active_codes": [
         "ATTACKING TRANSITION",
         "DEFENSIVE TRANSITION",
@@ -213,7 +213,7 @@
         ]
       ]
     },
-    "llm_response": "During this dangerous passage of play, FC Barcelona exhibited significant vulnerabilities in their defensive organization during the transition phases. A lack of coordinated pressing during the [ATTACKING TRANSITION] allowed Arsenal to exploit spaces left in the middle third, leading to an unchallenged progression towards the defensive third. \n\nAdditionally, a failure to effectively compact the defensive lines resulted in players being drawn out of position, which facilitated Arsenal's ability to create overloads in the final third, ultimately leading to [BALL IN THE BOX] situations and a conceded goal. \n\nCoaching staff should emphasize the importance of maintaining shape during transitions and emphasize communication among players to ensure quick positioning adjustments. Reinforcing interceptive actions and immediate recovery runs after losing possession will also help mitigate similar risks in future matches."
+    "llm_response": "During this passage of play, Barça's defensive structure was compromised due to ineffective transitions from both attacking and defensive phases. The rapid progression of Arsenal's attack highlighted poor positional discipline in the middle third, leading to a lack of coverage for spaces exploited in the final third, particularly along the flanks [DEFENSIVE TRANSITION]. The team appeared disorganized during critical moments, resulting in an inability to effectively mark opponents inside the box and contest for aerial balls [BALL IN THE BOX].\n\nTo address these vulnerabilities, coaching staff should focus on enhancing players' awareness and communication during transitions. Implementing targeted drills that emphasize quick reorganization and maintaining compactness in defense can mitigate these risks. Additionally, reinforcing the importance of tracking runs into the box and improving individual dueling skills will bolster the team's overall defensive resilience."
   },
   {
     "match_name": "Arsenal - Barça (5-3) Partit Amistós Gira 2023-2024",
@@ -226,7 +226,7 @@
       "window_end": 2539,
       "peak_score": 100.0,
       "severity": "critical",
-      "resulted_in_goal": false,
+      "resulted_in_goal": true,
       "active_codes": [
         "GOALS",
         "PLAYERS IN THE BOX"
@@ -246,7 +246,7 @@
         ]
       ]
     },
-    "llm_response": "During this critical phase, Barça's defensive organization showed vulnerabilities, primarily due to a lack of compactness and spatial awareness, which allowed Arsenal to effectively penetrate the area. The positioning of defenders was not cohesive, leading to gaps that Arsenal exploited with players making runs into the box [PLAYERS IN THE BOX]. Additionally, there seemed to be inadequate communication during defensive transitions, resulting in slow reactions and poor tracking of attackers [DEFENSIVE TRANSITION]. \n\nTo address these issues, the coaching staff should focus on reinforcing zone-based marking strategies and emphasize closing down spaces more effectively. Regular drills that enhance communication and quick adjustments during transitions will also be crucial in preventing similar threats in future matches."
+    "llm_response": "The critical vulnerability arose from inadequate marking and spatial awareness during the defensive phase. Players failed to establish compactness, allowing Arsenal to exploit gaps in the backline, particularly in their buildup near the box [PLAYERS IN THE BOX]. This lack of density led to an unopposed run, culminating in direct access to the goal [GOALS]. Coaching staff must focus on reinforcing the organization of the defensive shape during transitions and ensure players consistently monitor their assignments to prevent similar breakdowns in the future. Emphasizing communication among defenders during such moments will also be essential for closing down attacking opportunities effectively."
   },
   {
     "match_name": "Barça - AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
