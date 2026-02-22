@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import pandas as pd
+import math
 from pathlib import Path
 from typing import Optional
 
@@ -21,6 +22,18 @@ from tracking_features import summarize_window, load_team_map
 
 PARSED_DIR = Path("parsed")
 
+
+def _nan_to_none(obj):
+    """
+    Recursively replace float('nan') with None so JSON is clean.
+    """
+    if isinstance(obj, float):
+        return None if math.isnan(obj) else obj
+    if isinstance(obj, dict):
+        return {k: _nan_to_none(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_nan_to_none(v) for v in obj]
+    return obj
 
 def load_tracking_frames(match_name: str):
     """
@@ -207,8 +220,10 @@ def main(limit_matches: Optional[int], limit_dangers: Optional[int], top_n_patte
                 }
             )
 
+    clean_moments = _nan_to_none(all_moment_outputs)
+
     (OUT_DIR / "danger_moment_explanations.json").write_text(
-        json.dumps(all_moment_outputs, indent=2, ensure_ascii=False),
+        json.dumps(clean_moments, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -226,11 +241,12 @@ def main(limit_matches: Optional[int], limit_dangers: Optional[int], top_n_patte
         text = explain_pattern(p)
         pattern_outputs.append({"pattern": p, "llm_response": text})
 
+    clean_patterns = _nan_to_none(pattern_outputs)
+
     (OUT_DIR / "pattern_explanations.json").write_text(
-        json.dumps(pattern_outputs, indent=2, ensure_ascii=False),
+        json.dumps(clean_patterns, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
-
     print(f"Saved: {OUT_DIR / 'danger_moment_explanations.json'}")
     print(f"Saved: {OUT_DIR / 'pattern_explanations.json'}")
 

@@ -313,49 +313,69 @@ def build_window_prompt(
     )
 
 def build_pattern_prompt(pattern: dict) -> str:
-    """
-    Build a pattern prompt that discourages bullets/numbering and keeps the model grounded.
-    """
-    pattern_name = pattern.get("pattern_name") or pattern.get("name") or "Recurring defensive pattern"
+    pattern_name = (
+        pattern.get("pattern_name")
+        or pattern.get("name")
+        or pattern.get("pattern")  # IMPORTANT: your schema uses this a lot
+        or "Defensive pattern"
+    )
+
     match_count = pattern.get("match_count")
     baseline_count = pattern.get("baseline_match_count")
     examples = pattern.get("examples") or []
     evidence = pattern.get("evidence") or pattern.get("supporting_evidence") or {}
 
-    # Keep examples compact (LLM doesn't need the whole world)
-    ex_lines = []
-    for ex in examples[:6]:
-        # Try common keys
-        m = ex.get("match") or ex.get("match_name") or ""
-        w0 = ex.get("start_s") or ex.get("t0") or ex.get("window_start_s")
-        w1 = ex.get("end_s") or ex.get("t1") or ex.get("window_end_s")
-        peak = ex.get("peak_s") or ex.get("peak_time_s") or ex.get("peak_time")
-        risk = ex.get("risk") or ex.get("risk_peak") or ex.get("risk_score")
-        line = f"- {m} | window {w0}–{w1} | peak {peak} | risk {risk}"
-        ex_lines.append(line)
+    # Pull event codes from wherever they exist (depends on your formatter)
+    event_codes = (
+        pattern.get("event_codes")
+        or pattern.get("active_event_codes")
+        or (evidence.get("event_codes") if isinstance(evidence, dict) else None)
+        or []
+    )
+    if isinstance(event_codes, str):
+        event_codes = [c.strip() for c in event_codes.split(",") if c.strip()]
+    if not isinstance(event_codes, list):
+        event_codes = []
 
-    example_block = "\n".join(ex_lines) if ex_lines else "(no examples provided)"
+    # Make prompts unique even when match_count is 1 by anchoring on matches (names only, no times)
+    ex_match_names = []
+    for ex in examples[:6]:
+        m = ex.get("match") or ex.get("match_name")
+        if m:
+            ex_match_names.append(str(m))
+    ex_match_names = list(dict.fromkeys(ex_match_names))  # dedupe, keep order
+
+    # Uniqueness anchor (helps avoid cache collisions if everything else is similar)
+    anchor = {
+        "pattern_name": pattern_name,
+        "match_count": match_count,
+        "event_codes": event_codes,
+        "example_matches": ex_match_names[:3],
+    }
 
     prompt = f"""
-    You are writing for FC Barcelona coaching staff. This is a cross-match defensive pattern summary. 
-    Be conservative: do NOT claim the pattern is recurring unless match_count >= 2 (or more).
+    You are writing for FC Barcelona coaching staff. This is a cross-match defensive pattern summary.
+    Be conservative: do NOT call it recurring unless match_count >= 2.
 
     Formatting rules (very important):
     - Write as one or two short paragraphs.
     - Do NOT use bullet points, numbered lists, headers, timestamps, or timecodes.
-    - Keep it concrete and tactical (pressing/cover/compactness, overloads, marking, spacing, rest defense, transition behavior).
 
-    Pattern name: {pattern_name}
+    Pattern: {pattern_name}
     Support: match_count={match_count}, baseline_match_count={baseline_count}
+    Event codes for THIS pattern: {", ".join(event_codes) if event_codes else "(missing event codes)"}
 
-    Examples (for grounding; do not copy timestamps into the output):
-    {example_block}
+    Example matches (names only): {", ".join(ex_match_names[:6]) if ex_match_names else "(no examples)"}
 
-    Additional evidence (if any). Use it to avoid generic copy/paste language and make this pattern distinct:
+    Additional evidence (if any):
     {json.dumps(evidence, ensure_ascii=False)[:2000]}
 
+    Uniqueness anchor (do not mention this field in your output):
+    {json.dumps(anchor, ensure_ascii=False)}
+
     Write:
-    Explain the tactical mechanism behind THIS specific event-code combo, what usually triggers it, and one or two coaching adjustments to reduce the risk. Explicitly reference the provided event_codes (by name) when describing the mechanism.
+    Explain the tactical mechanism behind THIS specific event-code combo, what usually triggers it, and one or two coaching adjustments.
+    Explicitly reference at least TWO of the provided event codes by name in your explanation.
     If match_count is 0 or 1, explicitly say there is not enough evidence to call it recurring yet.
     """.strip()
 
