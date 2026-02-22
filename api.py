@@ -58,7 +58,10 @@ VIDEO_H2_EXTRA_OFFSETS = {
 
 def _get_match_data(index: int):
     if index not in _cache:
-        events_df = load_events(index)
+        matches = list_matches()
+        if index < 0 or index >= len(matches):
+            raise HTTPException(status_code=404, detail=f"Match index {index} not found")
+        events_df = load_events(matches[index])
         risk_df = compute_risk_score(events_df)
         _cache[index] = (events_df, risk_df)
     return _cache[index]
@@ -102,7 +105,7 @@ def get_risk(index: int):
     timeline = []
     for i in range(0, len(risk_df), 3):
         row = risk_df.iloc[i]
-        raw_sec = int(row["timestamp_sec"])
+        raw_sec = int(row["time_s"])
         display_sec = _apply_offset(raw_sec, offset_sec, h2_start_sec)
         timeline.append({
             "time_sec": raw_sec,
@@ -133,24 +136,28 @@ def get_dangers(index: int):
 
     results = []
     for d in dangers:
-        peak_display = _apply_offset(d["peak_time"], offset_sec, h2_start_sec)
-        window_start_display = _apply_offset(d["window_start"], offset_sec, h2_start_sec)
-        window_end_display = _apply_offset(d["window_end"], offset_sec, h2_start_sec)
+        peak_s = d["peak"]["time_s"]
+        win_start = d["danger_window"]["start_s"]
+        win_end   = d["danger_window"]["end_s"]
 
-        explanation = explain_moment(d, match_name, opponent, offset_sec, h2_start_sec)
+        peak_display         = _apply_offset(peak_s,    offset_sec, h2_start_sec)
+        window_start_display = _apply_offset(win_start, offset_sec, h2_start_sec)
+        window_end_display   = _apply_offset(win_end,   offset_sec, h2_start_sec)
+
+        explanation = explain_moment(d, match_name, opponent)
 
         results.append({
-            "peak_time": d["peak_time"],
-            "window_start": d["window_start"],
-            "window_end": d["window_end"],
+            "peak_time": peak_s,
+            "window_start": win_start,
+            "window_end": win_end,
             "display_peak_sec": peak_display,
             "display_peak_minute": round(peak_display / 60.0, 2),
             "display_window_start": window_start_display,
             "display_window_end": window_end_display,
-            "peak_score": d["peak_score"],
+            "peak_score": d["peak"]["score"],
             "severity": d["severity"],
-            "active_codes": d["active_codes"],
-            "resulted_in_goal": d["resulted_in_goal"],
+            "active_codes": d.get("active_event_codes", []),
+            "resulted_in_goal": d.get("resulted_in_goal", False),
             "top_contributors": [{"code": c, "weight": w} for c, w in d.get("top_contributors", [])],
             "nexus_timestamp": d.get("nexus_timestamp", ""),
             "explanation": explanation,

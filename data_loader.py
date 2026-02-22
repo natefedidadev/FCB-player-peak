@@ -120,10 +120,10 @@ def load_events(match_name: str, matches_dir: Path = MATCHES_DIR) -> pd.DataFram
 
         rows.append(
             {
-                "match": match_name,
+                "match_name": match_name,
                 "code": code,
-                "team": team or "N/A",
-                "half": half,
+                "Team": team or "N/A",
+                "Half": half,
                 "start_s": float(start_s),
                 "end_s": float(end_s),
                 "timestamp": pd.to_timedelta(start_s, unit="s"),
@@ -137,6 +137,27 @@ def load_events(match_name: str, matches_dir: Path = MATCHES_DIR) -> pd.DataFram
 
     df = df.sort_values("timestamp").reset_index(drop=True)
     return df
+
+def get_halftime_offset(events_df: pd.DataFrame) -> pd.Timedelta:
+    """
+    Compute the halftime break duration as the gap between the end of the
+    last 1st-half event and the start of the first 2nd-half event.
+    Returns Timedelta(0) if either half is missing.
+    """
+    half_col = "Half" if "Half" in events_df.columns else "half"
+
+    h1 = events_df[events_df[half_col] == "1st Half"]
+    h2 = events_df[events_df[half_col] == "2nd Half"]
+
+    if h1.empty or h2.empty:
+        return pd.Timedelta(0)
+
+    h1_end   = h1["end_timestamp"].max()
+    h2_start = h2["timestamp"].min()
+    offset   = h2_start - h1_end
+
+    return offset if offset > pd.Timedelta(0) else pd.Timedelta(0)
+
 
 def load_team_map(match_parsed_dir: Path) -> dict:
     """

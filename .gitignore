@@ -6,5 +6,8 @@ cache/
 venv/
 .env
 /outputs
-/outputs/llm_insights
 /parsed
+/matches_edited_xmls
+/Videos
+/Workspaces
+/FCB_Assets
