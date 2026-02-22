@@ -25,6 +25,11 @@ class DangerMoment:
     meta: Dict[str, Any]
 
 
+def seconds_to_mmss(seconds: float) -> str:
+    minutes = int(seconds // 60)
+    secs = int(seconds % 60)
+    return f"{minutes:02d}:{secs:02d}"
+
 def _severity_from_score(score: float) -> str:
     if score >= 80:
         return "high"
@@ -127,8 +132,17 @@ def detect_danger_moments(
         out.append(
             {
                 "match_name": match_name,
-                "danger_window": {"start_s": float(t0), "end_s": float(t1)},
-                "peak": {"time_s": peak_s, "score": peak_score},
+                "danger_window": {
+                    "start_s": float(t0),
+                    "end_s": float(t1),
+                    "start_mmss": seconds_to_mmss(t0),
+                    "end_mmss": seconds_to_mmss(t1),
+                },
+                "peak": {
+                    "time_s": peak_s,
+                    "time_mmss": seconds_to_mmss(peak_s),
+                    "score": peak_score,
+                },
                 "severity": severity,
                 "active_event_codes": active_codes,
             }

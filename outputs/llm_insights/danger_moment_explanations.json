@@ -6,10 +6,13 @@
       "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
       "danger_window": {
         "start_s": 943.44,
-        "end_s": 1065.19
+        "end_s": 1065.19,
+        "start_mmss": "15:43",
+        "end_mmss": "17:45"
       },
       "peak": {
         "time_s": 1046.69,
+        "time_mmss": "17:26",
         "score": 94.64285714285715
       },
       "severity": "high",
@@ -85,10 +88,13 @@
       "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
       "danger_window": {
         "start_s": 1086.94,
-        "end_s": 1103.44
+        "end_s": 1103.44,
+        "start_mmss": "18:06",
+        "end_mmss": "18:23"
       },
       "peak": {
         "time_s": 1087.69,
+        "time_mmss": "18:07",
         "score": 50.81845238095236
       },
       "severity": "moderate",
@@ -161,10 +167,13 @@
       "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
       "danger_window": {
         "start_s": 1148.94,
-        "end_s": 1170.19
+        "end_s": 1170.19,
+        "start_mmss": "19:08",
+        "end_mmss": "19:30"
       },
       "peak": {
         "time_s": 1152.44,
+        "time_mmss": "19:12",
         "score": 88.39285714285714
       },
       "severity": "high",
@@ -239,10 +248,13 @@
       "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
       "danger_window": {
         "start_s": 1320.69,
-        "end_s": 1352.19
+        "end_s": 1352.19,
+        "start_mmss": "22:00",
+        "end_mmss": "22:32"
       },
       "peak": {
         "time_s": 1336.94,
+        "time_mmss": "22:16",
         "score": 69.04761904761904
       },
       "severity": "moderate",
@@ -316,10 +328,13 @@
       "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
       "danger_window": {
         "start_s": 1368.19,
-        "end_s": 1449.69
+        "end_s": 1449.69,
+        "start_mmss": "22:48",
+        "end_mmss": "24:09"
       },
       "peak": {
         "time_s": 1437.69,
+        "time_mmss": "23:57",
         "score": 100.0
       },
       "severity": "high",
