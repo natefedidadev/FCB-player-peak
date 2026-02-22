@@ -15,6 +15,26 @@ from pathlib import Path
 MATCHES_DIR = Path("matches")
 
 
+def get_halftime_offset(events_df: pd.DataFrame) -> pd.Timedelta:
+    """
+    Compute the halftime break duration as the gap between the end of the
+    last 1st-half event and the start of the first 2nd-half event.
+    Returns Timedelta(0) if either half is missing.
+    """
+    half_col = "Half" if "Half" in events_df.columns else "half"
+
+    h1 = events_df[events_df[half_col] == "1st Half"]
+    h2 = events_df[events_df[half_col] == "2nd Half"]
+
+    if h1.empty or h2.empty:
+        return pd.Timedelta(0)
+
+    h1_end   = h1["end_timestamp"].max()
+    h2_start = h2["timestamp"].min()
+    offset   = h2_start - h1_end
+
+    return offset if offset > pd.Timedelta(0) else pd.Timedelta(0)
+
 def list_matches(matches_dir: Path = MATCHES_DIR) -> list[str]:
     """
     Returns match folder names under ./matches
