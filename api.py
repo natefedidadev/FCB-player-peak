@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import numpy as np
 import os
 import glob as glob_module
+import pandas as pd
 
 from data_loader import list_matches, load_events, get_halftime_offset
 from risk_engine import compute_risk_score
