@@ -1,376 +1,390 @@
 [
   {
     "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (0-1) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 85,
-    "h2_start_sec": 2785,
+    "opponent": "AC Milan",
     "danger_moment": {
-      "peak_time": 1002,
-      "window_start": 974,
-      "window_end": 1059,
-      "peak_score": 81.33,
+      "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+      "danger_window": {
+        "start_s": 943.44,
+        "end_s": 1065.19
+      },
+      "peak": {
+        "time_s": 1046.69,
+        "score": 94.64285714285715
+      },
       "severity": "high",
-      "resulted_in_goal": false,
-      "active_codes": [
-        "PROGRESSION",
-        "DEFENDING IN MIDDLE THIRD",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD",
-        "PLAYERS IN THE BOX",
-        "BALL IN THE BOX",
+      "active_event_codes": [
+        "ATTACKING TRANSITION",
         "BALL IN FINAL THIRD",
-        "SET PIECES",
-        "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION"
-      ],
-      "nexus_timestamp": "16:42",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 13.33,
-      "num_active_codes": 10,
-      "top_contributors": [
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ]
-      ]
-    },
-    "llm_response": "Defensively, the main vulnerability arose during the progression of AC Milan's attack, highlighted by inadequate coverage in the middle third and poor defensive organization when transitioning back into a defensive shape. The players struggled to maintain compactness, allowing Milan to exploit gaps and create high-quality chances, especially in the final third. \n\nAdditionally, the inability to effectively track runs into the box led to several instances where opponents found space for shots or crosses. Coaches should emphasize improving defensive anticipation during transitions and ensuring players maintain tight marking protocols when under pressure, particularly in crucial areas of the pitch like the defensive third and around set-piece situations. This includes reinforcing communication and maintaining a collective defensive line to prevent opponents from exploiting these vulnerabilities."
-  },
-  {
-    "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (0-1) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 85,
-    "h2_start_sec": 2785,
-    "danger_moment": {
-      "peak_time": 2132,
-      "window_start": 2116,
-      "window_end": 2161,
-      "peak_score": 77.17,
-      "severity": "high",
-      "resulted_in_goal": false,
-      "active_codes": [
-        "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD",
-        "BALL IN THE BOX",
+        "PROGRESSION",
         "PLAYERS IN THE BOX",
-        "BALL IN FINAL THIRD"
-      ],
-      "nexus_timestamp": "35:32",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 13.33,
-      "num_active_codes": 7,
-      "top_contributors": [
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ]
+        "BALL IN THE BOX"
       ]
     },
-    "llm_response": "During this critical passage of play, the defensive vulnerabilities were primarily exposed during the [ATTACKING TRANSITION] and subsequent [DEFENSIVE TRANSITION]. The team appeared disorganized, leading to inadequate shape as players were caught out of position, leaving significant gaps in the defensive line. Additionally, the lack of effective communication allowed AC Milan to exploit spaces in the [DEFENDING IN DEFENSIVE THIRD] phase, resulting in multiple players being allowed into the [BALL IN THE BOX] and [PLAYERS IN THE BOX] areas, thereby increasing the threat level.\n\nCoaching staff should emphasize the importance of maintaining compactness and discipline during transitions. Specifically, players must be drilled to quickly regain their structure and ensure effective tracking of attackers when possession changes. Reinforcing the need for proactive communication and awareness will mitigate such intense threats in future matches."
+    "tracking_summary": {
+      "window": {
+        "start_s": 943.44,
+        "end_s": 1065.19,
+        "target_s": 1046.69,
+        "snap_s": 1046.68
+      },
+      "direction_normalized": false,
+      "debug_team_ids_in_snapshot": {
+        "MET_user_team_fpEItfNXOW-t2": 11,
+        "MET_user_team_F-ClX8ss10Yc": 7
+      },
+      "debug_expected_team_ids": {
+        "defending_team_id": "MET_user_team_fpEItfNXOW-t2",
+        "attacking_team_id": "MET_user_team_F-ClX8ss10Yc"
+      },
+      "ball_median_xy": {
+        "x": 0.44546,
+        "y": 0.65281
+      },
+      "tracking_counts": {
+        "n_total_players": 18,
+        "n_def_players": 11,
+        "n_att_players": 7
+      },
+      "tracking_coverage_warning": false,
+      "def_team": {
+        "team_id": "MET_user_team_fpEItfNXOW-t2",
+        "shape": {
+          "team_width": 0.18080000000000007,
+          "team_length": 0.37779499999999994,
+          "centroid_x": 0.8567454545454546,
+          "centroid_y": 0.6771618181818183
+        },
+        "n_players": 11
+      },
+      "nearest_defender_to_ball": 0.35392166774584455,
+      "att_team": {
+        "team_id": "MET_user_team_F-ClX8ss10Yc",
+        "shape": {
+          "team_width": 0.196531,
+          "team_length": 0.42296300000000003,
+          "centroid_x": 0.8141,
+          "centroid_y": 0.6986314285714286
+        },
+        "n_players": 7
+      },
+      "nearest_attacker_to_ball": 0.34365692310791585,
+      "ball_side_overload": {
+        "radius": 0.08,
+        "defenders": 0,
+        "attackers": 0,
+        "overload": false
+      }
+    },
+    "llm_response": "In this defensive passage, Barcelona is facing a critical threat as AC Milan is engaged in an attacking transition with the ball in the final third. Although Barcelona has 11 players tracked, there is no crowding near the ball in the defined radius, which suggests that the defensive line may be too spread out, creating gaps for the attackers to exploit. With the nearest defender to the ball being at a distance of 0.35 units, it indicates a moderate separation that could allow for quicker offensive actions from Milan without immediate pressure. The coaching staff should focus on tightening the defensive shape to ensure better coverage and quicker responses during transitions, as the current setup does not facilitate effective pressure on the ball carrier."
   },
   {
     "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (0-1) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 85,
-    "h2_start_sec": 2785,
+    "opponent": "AC Milan",
     "danger_moment": {
-      "peak_time": 3048,
-      "window_start": 3030,
-      "window_end": 3057,
-      "peak_score": 68.17,
+      "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+      "danger_window": {
+        "start_s": 1086.94,
+        "end_s": 1103.44
+      },
+      "peak": {
+        "time_s": 1087.69,
+        "score": 50.81845238095236
+      },
       "severity": "moderate",
-      "resulted_in_goal": false,
-      "active_codes": [
-        "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD",
+      "active_event_codes": [
         "PLAYERS IN THE BOX",
-        "BALL IN FINAL THIRD",
-        "BALL IN THE BOX"
-      ],
-      "nexus_timestamp": "50:48",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 13.33,
-      "num_active_codes": 7,
-      "top_contributors": [
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ]
+        "DEFENSIVE TRANSITION"
       ]
     },
-    "llm_response": "During this passage of play, the defensive vulnerabilities were primarily rooted in poor organization during the **defensive transition**. The team struggled to quickly regain their shape, allowing the opponent to exploit space in the channels. Specifically, there was an absence of coordinated pressing, which let AC Milan move the ball into threatening positions unchecked, as indicated by the presence of players in the box and the ball in the final third. To address these issues, the coaching staff should emphasize quicker defensive recovery and communication among defenders to ensure they close down space effectively, especially during transitions. Additionally, reinforcing the importance of maintaining defensive discipline and proper positioning when engaging in attacking transitions will minimize the risks of similar situations in future matches."
-  },
-  {
-    "match_name": "Arsenal - Barça (5-3) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (5-3) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 92,
-    "h2_start_sec": 2792,
-    "danger_moment": {
-      "peak_time": 729,
-      "window_start": 705,
-      "window_end": 735,
-      "peak_score": 100.0,
-      "severity": "critical",
-      "resulted_in_goal": true,
-      "active_codes": [
-        "GOALS",
-        "SET PIECES",
-        "BALL IN FINAL THIRD",
-        "PROGRESSION",
-        "DEFENDING IN MIDDLE THIRD",
-        "PLAYERS IN THE BOX",
-        "BALL IN THE BOX"
-      ],
-      "nexus_timestamp": "12:09",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 16.33,
-      "num_active_codes": 7,
-      "top_contributors": [
-        [
-          "GOALS",
-          10.0
-        ],
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ]
-      ]
+    "tracking_summary": {
+      "window": {
+        "start_s": 1086.94,
+        "end_s": 1103.44,
+        "target_s": 1087.69,
+        "snap_s": 1087.68
+      },
+      "direction_normalized": false,
+      "debug_team_ids_in_snapshot": {
+        "MET_user_team_fpEItfNXOW-t2": 10,
+        "MET_user_team_F-ClX8ss10Yc": 9
+      },
+      "debug_expected_team_ids": {
+        "defending_team_id": "MET_user_team_fpEItfNXOW-t2",
+        "attacking_team_id": "MET_user_team_F-ClX8ss10Yc"
+      },
+      "ball_median_xy": {
+        "x": 0.76762,
+        "y": 0.23894
+      },
+      "tracking_counts": {
+        "n_total_players": 19,
+        "n_def_players": 10,
+        "n_att_players": 9
+      },
+      "tracking_coverage_warning": false,
+      "def_team": {
+        "team_id": "MET_user_team_fpEItfNXOW-t2",
+        "shape": {
+          "team_width": 0.15589299999999995,
+          "team_length": 0.32671899999999987,
+          "centroid_x": 0.832602,
+          "centroid_y": 0.5096619999999998
+        },
+        "n_players": 10
+      },
+      "nearest_defender_to_ball": 0.121849370946263,
+      "att_team": {
+        "team_id": "MET_user_team_F-ClX8ss10Yc",
+        "shape": {
+          "team_width": 0.18230800000000003,
+          "team_length": 0.44205199999999994,
+          "centroid_x": 0.7823111111111111,
+          "centroid_y": 0.5190711111111111
+        },
+        "n_players": 9
+      },
+      "nearest_attacker_to_ball": 0.04506170214272871,
+      "ball_side_overload": {
+        "radius": 0.08,
+        "defenders": 0,
+        "attackers": 1,
+        "overload": true
+      }
     },
-    "llm_response": "Defensively, Barcelona struggled with their organization during key moments, particularly when the opposition exploited spaces in the middle third. A lack of compactness allowed Arsenal to progress effectively into the final third, especially through quick transitions and overloads, resulting in exposure during [DEFENDING IN MIDDLE THIRD] scenarios. The players' positioning when defending set pieces was also misaligned, which meant they could not adequately mark opponents in the box, leading to an unchallenged shot from a well-placed cross into the [BALL IN THE BOX]. \n\nCoaching staff should emphasize improving defensive cohesion, encouraging midfielders to assist in shutting down passing lanes earlier, and refining set-piece marking strategies to prevent similar vulnerabilities."
+    "llm_response": "During this defensive phase, FC Barcelona encountered a moment of vulnerability, stemming from a failure to adequately transition into defense, highlighted by the active event code [DEFENSIVE TRANSITION]. Although there was one attacker near the ball, the defenders were not in favorable positions, creating a potential for a ball-side overload, which can lead to critical gaps in the defensive line. The nearest defender was relatively close at a distance of 0.12, indicating a moderate defensive proximity, yet with defenders outnumbered, there was a clear numerical disadvantage near the ball. To mitigate similar risks, coaching staff should emphasize the importance of maintaining defensive shape and readiness to transition effectively when possession is lost. Reinforcing these principles can help prevent such vulnerabilities in future situations."
   },
   {
-    "match_name": "Arsenal - Barça (5-3) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (5-3) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 92,
-    "h2_start_sec": 2792,
+    "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+    "opponent": "AC Milan",
     "danger_moment": {
-      "peak_time": 2450,
-      "window_start": 2430,
-      "window_end": 2498,
-      "peak_score": 100.0,
-      "severity": "critical",
-      "resulted_in_goal": false,
-      "active_codes": [
-        "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION",
-        "BALL IN FINAL THIRD",
-        "PROGRESSION",
-        "DEFENDING IN MIDDLE THIRD",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD",
-        "PLAYERS IN THE BOX",
-        "BALL IN THE BOX",
-        "GOALS"
-      ],
-      "nexus_timestamp": "40:50",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 16.33,
-      "num_active_codes": 10,
-      "top_contributors": [
-        [
-          "GOALS",
-          10.0
-        ],
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ]
-      ]
-    },
-    "llm_response": "During this passage of play, Barça's defensive structure was compromised due to ineffective transitions from both attacking and defensive phases. The rapid progression of Arsenal's attack highlighted poor positional discipline in the middle third, leading to a lack of coverage for spaces exploited in the final third, particularly along the flanks [DEFENSIVE TRANSITION]. The team appeared disorganized during critical moments, resulting in an inability to effectively mark opponents inside the box and contest for aerial balls [BALL IN THE BOX].\n\nTo address these vulnerabilities, coaching staff should focus on enhancing players' awareness and communication during transitions. Implementing targeted drills that emphasize quick reorganization and maintaining compactness in defense can mitigate these risks. Additionally, reinforcing the importance of tracking runs into the box and improving individual dueling skills will bolster the team's overall defensive resilience."
-  },
-  {
-    "match_name": "Arsenal - Barça (5-3) Partit Amistós Gira 2023-2024",
-    "opponent": "Barça (5-3) Partit Amistós Gira 2023-2024",
-    "halftime_offset_sec": 92,
-    "h2_start_sec": 2792,
-    "danger_moment": {
-      "peak_time": 2537,
-      "window_start": 2535,
-      "window_end": 2539,
-      "peak_score": 100.0,
-      "severity": "critical",
-      "resulted_in_goal": true,
-      "active_codes": [
-        "GOALS",
-        "PLAYERS IN THE BOX"
-      ],
-      "nexus_timestamp": "42:17",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 16.33,
-      "num_active_codes": 2,
-      "top_contributors": [
-        [
-          "GOALS",
-          10.0
-        ],
-        [
-          "PLAYERS IN THE BOX",
-          0.0
-        ]
-      ]
-    },
-    "llm_response": "The critical vulnerability arose from inadequate marking and spatial awareness during the defensive phase. Players failed to establish compactness, allowing Arsenal to exploit gaps in the backline, particularly in their buildup near the box [PLAYERS IN THE BOX]. This lack of density led to an unopposed run, culminating in direct access to the goal [GOALS]. Coaching staff must focus on reinforcing the organization of the defensive shape during transitions and ensure players consistently monitor their assignments to prevent similar breakdowns in the future. Emphasizing communication among defenders during such moments will also be essential for closing down attacking opportunities effectively."
-  },
-  {
-    "match_name": "Barça - AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "opponent": "AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "halftime_offset_sec": 498,
-    "h2_start_sec": 3198,
-    "danger_moment": {
-      "peak_time": 592,
-      "window_start": 552,
-      "window_end": 594,
-      "peak_score": 100.0,
-      "severity": "critical",
-      "resulted_in_goal": true,
-      "active_codes": [
-        "GOALS",
-        "BALL IN FINAL THIRD",
-        "PLAYERS IN THE BOX"
-      ],
-      "nexus_timestamp": "09:52",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 2.5,
-      "num_active_codes": 3,
-      "top_contributors": [
-        [
-          "GOALS",
-          10.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ],
-        [
-          "PLAYERS IN THE BOX",
-          0.0
-        ]
-      ]
-    },
-    "llm_response": "During this critical passage, Barcelona's defensive shape was compromised by inadequate pressure on the ball carrier and poor compactness between the lines. The players failed to effectively engage in [DEFENSIVE TRANSITION], allowing AC Milan to exploit gaps in the midfield and penetrate into the [BALL IN FINAL THIRD] unchallenged. Additionally, inadequate recognition of incoming runs resulted in a lack of coverage within the [PLAYERS IN THE BOX], leading to free attackers and an eventual goal conceded. \n\nCoaching staff should emphasize improving player positioning during transitions, reinforcing the importance of closing down spaces quickly, and enhancing communication to ensure defensive awareness for tracking runs into the box. A more structured approach to defending set pieces and preventing isolations in 1v1 situations would also be beneficial."
-  },
-  {
-    "match_name": "Barça - AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "opponent": "AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "halftime_offset_sec": 498,
-    "h2_start_sec": 3198,
-    "danger_moment": {
-      "peak_time": 947,
-      "window_start": 876,
-      "window_end": 949,
-      "peak_score": 100.0,
-      "severity": "critical",
-      "resulted_in_goal": true,
-      "active_codes": [
-        "PROGRESSION",
-        "DEFENDING IN MIDDLE THIRD",
-        "GOALS",
-        "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION",
-        "BALL IN FINAL THIRD",
-        "PLAYERS IN THE BOX",
-        "BALL IN THE BOX",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD"
-      ],
-      "nexus_timestamp": "15:47",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 2.5,
-      "num_active_codes": 10,
-      "top_contributors": [
-        [
-          "GOALS",
-          10.0
-        ],
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ]
-      ]
-    },
-    "llm_response": "The defensive vulnerability during this phase stemmed from a failure to maintain compactness while engaging in DEFENDING IN MIDDLE THIRD. As AC Milan progressed the ball, Barcelona’s players did not effectively close down passing lanes, allowing for smooth transitions into the final third where they could exploit space. \n\nThe lack of communication and awareness among defenders during ATTACKING TRANSITION led to inadequate coverage in the BOX, resulting in unmarked players. Coaching staff should emphasize the importance of maintaining a tighter structure, enhancing communication to prevent opponents from exploiting gaps, especially during quick transitions. Additionally, reinforcing drills that focus on defensive recovery and proactive pressure will be critical in mitigating these risks in future matches."
-  },
-  {
-    "match_name": "Barça - AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "opponent": "AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025",
-    "halftime_offset_sec": 498,
-    "h2_start_sec": 3198,
-    "danger_moment": {
-      "peak_time": 2293,
-      "window_start": 2282,
-      "window_end": 2308,
-      "peak_score": 72.5,
+      "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+      "danger_window": {
+        "start_s": 1148.94,
+        "end_s": 1170.19
+      },
+      "peak": {
+        "time_s": 1152.44,
+        "score": 88.39285714285714
+      },
       "severity": "high",
-      "resulted_in_goal": false,
-      "active_codes": [
-        "PROGRESSION",
-        "DEFENDING IN MIDDLE THIRD",
-        "BALL IN FINAL THIRD",
-        "CREATING CHANCES",
-        "DEFENDING IN DEFENSIVE THIRD",
+      "active_event_codes": [
         "PLAYERS IN THE BOX",
-        "BALL IN THE BOX"
-      ],
-      "nexus_timestamp": "38:13",
-      "threshold_used": 40.0,
-      "raw_percentile_threshold": 2.5,
-      "num_active_codes": 7,
-      "top_contributors": [
-        [
-          "BALL IN THE BOX",
-          8.0
-        ],
-        [
-          "CREATING CHANCES",
-          7.0
-        ],
-        [
-          "BALL IN FINAL THIRD",
-          5.0
-        ]
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "SET PIECES"
       ]
     },
-    "llm_response": "During this passage of play, Barcelona's defensive structure exhibited vulnerabilities primarily during the transition phases, especially in the middle third where spacing and pressure were insufficient. The failure to tightly mark opposing players during [PROGRESSION] allowed AC Milan to capitalize on the gaps created when Barcelona's midfielders advanced forward, leading to a dangerous buildup highlighted by [BALL IN FINAL THIRD] and [CREATING CHANCES].\n\nFurthermore, the lack of cohesive communication among defenders during [DEFENDING IN MIDDLE THIRD] meant that they were unable to effectively coordinate their line and shape, allowing attackers to find space in the [BALL IN THE BOX]. To address this, the coaching staff should emphasize better positioning and awareness in the middle third, ensure tighter marking in high-risk areas, and improve the communication between units to maintain defensive solidity during transitions and pressure situations."
+    "tracking_summary": {
+      "window": {
+        "start_s": 1148.94,
+        "end_s": 1170.19,
+        "target_s": 1152.44,
+        "snap_s": 1152.44
+      },
+      "direction_normalized": false,
+      "debug_team_ids_in_snapshot": {
+        "MET_user_team_fpEItfNXOW-t2": 7,
+        "MET_user_team_F-ClX8ss10Yc": 5
+      },
+      "debug_expected_team_ids": {
+        "defending_team_id": "MET_user_team_fpEItfNXOW-t2",
+        "attacking_team_id": "MET_user_team_F-ClX8ss10Yc"
+      },
+      "ball_median_xy": {
+        "x": 0.88321,
+        "y": 0.50923
+      },
+      "tracking_counts": {
+        "n_total_players": 12,
+        "n_def_players": 7,
+        "n_att_players": 5
+      },
+      "tracking_coverage_warning": true,
+      "def_team": {
+        "team_id": "MET_user_team_fpEItfNXOW-t2",
+        "shape": {
+          "team_width": 0.14481699999999997,
+          "team_length": 0.2628119999999998,
+          "centroid_x": 0.8952414285714285,
+          "centroid_y": 0.5933414285714286
+        },
+        "n_players": 7
+      },
+      "nearest_defender_to_ball": 0.051472728701711566,
+      "att_team": {
+        "team_id": "MET_user_team_F-ClX8ss10Yc",
+        "shape": {
+          "team_width": 0.19358600000000004,
+          "team_length": 0.3256840000000001,
+          "centroid_x": 0.8776860000000001,
+          "centroid_y": 0.61897
+        },
+        "n_players": 5
+      },
+      "nearest_attacker_to_ball": 0.05274104758155639,
+      "ball_side_overload": {
+        "radius": 0.08,
+        "defenders": 3,
+        "attackers": 2,
+        "overload": false
+      }
+    },
+    "llm_response": "During this defensive phase, FC Barcelona found themselves in a precarious situation as AC Milan exerted pressure with the ball in the final third and within the box. The nearest defender was very tight to the ball, yet there was a numerical disadvantage for Barcelona as they had three defenders against two attackers in the immediate area, failing to establish a defensive overload [SET PIECES]. Limited tracking coverage may have exacerbated communication issues among the defenders, contributing to their inability to effectively organize. The coaching staff should emphasize the importance of immediate communication and positioning in such scenarios to prevent numerical disadvantages and ensure sufficient coverage around the ball."
+  },
+  {
+    "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+    "opponent": "AC Milan",
+    "danger_moment": {
+      "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+      "danger_window": {
+        "start_s": 1320.69,
+        "end_s": 1352.19
+      },
+      "peak": {
+        "time_s": 1336.94,
+        "score": 69.04761904761904
+      },
+      "severity": "moderate",
+      "active_event_codes": [
+        "BALL IN FINAL THIRD",
+        "PLAYERS IN THE BOX",
+        "DEFENSIVE TRANSITION"
+      ]
+    },
+    "tracking_summary": {
+      "window": {
+        "start_s": 1320.69,
+        "end_s": 1352.19,
+        "target_s": 1336.94,
+        "snap_s": 1336.92
+      },
+      "direction_normalized": false,
+      "debug_team_ids_in_snapshot": {
+        "MET_user_team_F-ClX8ss10Yc": 11,
+        "MET_user_team_fpEItfNXOW-t2": 10
+      },
+      "debug_expected_team_ids": {
+        "defending_team_id": "MET_user_team_fpEItfNXOW-t2",
+        "attacking_team_id": "MET_user_team_F-ClX8ss10Yc"
+      },
+      "ball_median_xy": {
+        "x": 0.207305,
+        "y": 0.275825
+      },
+      "tracking_counts": {
+        "n_total_players": 21,
+        "n_def_players": 10,
+        "n_att_players": 11
+      },
+      "tracking_coverage_warning": false,
+      "def_team": {
+        "team_id": "MET_user_team_fpEItfNXOW-t2",
+        "shape": {
+          "team_width": 0.45446049999999955,
+          "team_length": 0.7256335,
+          "centroid_x": 0.451281,
+          "centroid_y": 0.45213300000000006
+        },
+        "n_players": 10
+      },
+      "nearest_defender_to_ball": 0.1809991028983293,
+      "att_team": {
+        "team_id": "MET_user_team_F-ClX8ss10Yc",
+        "shape": {
+          "team_width": 0.26265,
+          "team_length": 0.5400200000000001,
+          "centroid_x": 0.33172,
+          "centroid_y": 0.4613672727272728
+        },
+        "n_players": 11
+      },
+      "nearest_attacker_to_ball": 0.10236700176326356,
+      "ball_side_overload": {
+        "radius": 0.08,
+        "defenders": 0,
+        "attackers": 0,
+        "overload": false
+      }
+    },
+    "llm_response": "During this danger window, FC Barcelona experienced a defensive transition in which they were outmanned by AC Milan, indicating a potential numerical disadvantage. With AC Milan having 11 attackers compared to Barcelona's 10 defenders, this disparity highlights issues in defensive organization as the ball entered the final third [BALL IN FINAL THIRD][DEFENSIVE TRANSITION]. The nearest Barcelona defender was positioned moderately close to the ball, but failing to maintain compactness and coordination allowed the opposition to exploit this space more effectively. The coaching staff should address the need for tighter marking and quicker responsiveness during transitions to prevent such overload situations in the future. Moreover, ensuring that defenders are aware of positioning relative to the ball and their immediate opponents can help mitigate these risks."
+  },
+  {
+    "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+    "opponent": "AC Milan",
+    "danger_moment": {
+      "match_name": "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024",
+      "danger_window": {
+        "start_s": 1368.19,
+        "end_s": 1449.69
+      },
+      "peak": {
+        "time_s": 1437.69,
+        "score": 100.0
+      },
+      "severity": "high",
+      "active_event_codes": [
+        "BALL IN THE BOX",
+        "BALL IN FINAL THIRD",
+        "PLAYERS IN THE BOX",
+        "DEFENSIVE TRANSITION"
+      ]
+    },
+    "tracking_summary": {
+      "window": {
+        "start_s": 1368.19,
+        "end_s": 1449.69,
+        "target_s": 1437.69,
+        "snap_s": 1437.68
+      },
+      "direction_normalized": false,
+      "debug_team_ids_in_snapshot": {
+        "MET_user_team_F-ClX8ss10Yc": 5,
+        "MET_user_team_fpEItfNXOW-t2": 5
+      },
+      "debug_expected_team_ids": {
+        "defending_team_id": "MET_user_team_fpEItfNXOW-t2",
+        "attacking_team_id": "MET_user_team_F-ClX8ss10Yc"
+      },
+      "ball_median_xy": {
+        "x": 0.74234,
+        "y": 0.64317
+      },
+      "tracking_counts": {
+        "n_total_players": 10,
+        "n_def_players": 5,
+        "n_att_players": 5
+      },
+      "tracking_coverage_warning": true,
+      "def_team": {
+        "team_id": "MET_user_team_fpEItfNXOW-t2",
+        "shape": {
+          "team_width": 0.08997600000000006,
+          "team_length": 0.6580659999999999,
+          "centroid_x": 0.8452800000000001,
+          "centroid_y": 0.340632
+        },
+        "n_players": 5
+      },
+      "nearest_defender_to_ball": 0.10963724230388137,
+      "att_team": {
+        "team_id": "MET_user_team_F-ClX8ss10Yc",
+        "shape": {
+          "team_width": 0.16490800000000005,
+          "team_length": 0.347998,
+          "centroid_x": 0.8423359999999999,
+          "centroid_y": 0.31264000000000003
+        },
+        "n_players": 5
+      },
+      "nearest_attacker_to_ball": 0.1712656042525761,
+      "ball_side_overload": {
+        "radius": 0.08,
+        "defenders": 0,
+        "attackers": 0,
+        "overload": false
+      }
+    },
+    "llm_response": "In this passage, Barcelona faced a critical moment after a defensive transition, which was exacerbated by tracking coverage being limited, with only five tracked players on each side. The nearest defender to the ball was at a moderate distance of 0.11, while the nearest attacker was slightly further at 0.17, indicating that Barcelona had the opportunity to close down space but failed to do so effectively. Additionally, there was no crowding near the ball within the specified radius, leading to potential vulnerability in marking attackers in the box. The coaching staff should address the need for quicker aggressive response during defensive transitions and ensure that players maintain compactness to improve their defensive shape under pressure."
   }
 ]

@@ -1,25 +1,207 @@
 [
   {
     "pattern": {
-      "sequence": [
+      "pattern": "ATTACKING TRANSITION + BALL IN FINAL THIRD + BALL IN THE BOX + PLAYERS IN THE BOX + PROGRESSION",
+      "event_codes": [
         "ATTACKING TRANSITION",
-        "DEFENSIVE TRANSITION"
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "PLAYERS IN THE BOX",
+        "PROGRESSION"
       ],
-      "frequency": "2/3 matches",
-      "example_matches": [
-        "Arsenal - Barça (5-3) Partit Amistós Gira 2023-2024",
-        "Barça - AC Milan (2-2_ 3-4) Partit Amistós Gira 2024-2025"
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
       ],
-      "avg_time_to_goal": null,
-      "confidence_score": 0.4297,
-      "confidence_tier": "low",
-      "lift": 2.19,
-      "occurrences": 6,
-      "goals_in_pattern": 2,
-      "pattern_goal_rate": 0.3333,
-      "baseline_goal_rate": 0.1522,
-      "p_goal_rate_gt_baseline": 0.9235
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
     },
-    "llm_response": "The ATTACKING TRANSITION to DEFENSIVE TRANSITION sequence indicates a quick loss of possession following offensive play, exposing the team's defensive structure. This vulnerability suggests a lack of compactness between the midfield and defensive lines, often resulting in players being caught out of position when the ball is turned over, thereby allowing opponents time and space to exploit gaps.\n\nTo address this, coaching staff should emphasize the importance of immediate transition awareness among players. Implementing drills that promote quick repositioning following offensive plays can help maintain defensive shape. Additionally, reinforcing adaptive formations that prioritize defensive resilience during transitions can mitigate risks associated with counter-attacks, particularly ensuring that midfielders have clear responsibilities to protect the backline during offensive surges."
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "DEFENSIVE TRANSITION + PLAYERS IN THE BOX",
+      "event_codes": [
+        "DEFENSIVE TRANSITION",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "BALL IN FINAL THIRD + BALL IN THE BOX + PLAYERS IN THE BOX + SET PIECES",
+      "event_codes": [
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "PLAYERS IN THE BOX",
+        "SET PIECES"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "BALL IN FINAL THIRD + DEFENSIVE TRANSITION + PLAYERS IN THE BOX",
+      "event_codes": [
+        "BALL IN FINAL THIRD",
+        "DEFENSIVE TRANSITION",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "BALL IN FINAL THIRD + BALL IN THE BOX + DEFENSIVE TRANSITION + PLAYERS IN THE BOX",
+      "event_codes": [
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "DEFENSIVE TRANSITION",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "ATTACKING TRANSITION + BALL IN FINAL THIRD + PLAYERS IN THE BOX",
+      "event_codes": [
+        "ATTACKING TRANSITION",
+        "BALL IN FINAL THIRD",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "BALL IN FINAL THIRD + PLAYERS IN THE BOX",
+      "event_codes": [
+        "BALL IN FINAL THIRD",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "ATTACKING TRANSITION + BALL IN FINAL THIRD + BALL IN THE BOX + PLAYERS IN THE BOX",
+      "event_codes": [
+        "ATTACKING TRANSITION",
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "ATTACKING TRANSITION + BALL IN THE BOX + PLAYERS IN THE BOX + PROGRESSION + SET PIECES",
+      "event_codes": [
+        "ATTACKING TRANSITION",
+        "BALL IN THE BOX",
+        "PLAYERS IN THE BOX",
+        "PROGRESSION",
+        "SET PIECES"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
+  },
+  {
+    "pattern": {
+      "pattern": "BALL IN FINAL THIRD + BALL IN THE BOX + PLAYERS IN THE BOX",
+      "event_codes": [
+        "BALL IN FINAL THIRD",
+        "BALL IN THE BOX",
+        "PLAYERS IN THE BOX"
+      ],
+      "match_count": 1,
+      "matches": [
+        "AC Milan - Barça (0-1) Partit Amistós Gira 2023-2024"
+      ],
+      "baseline_match_count": 1,
+      "prevalence_goals": 1.0,
+      "prevalence_all": 1.0,
+      "lift": 1.0,
+      "confidence": 73
+    },
+    "llm_response": "There is currently insufficient evidence to assert a recurring defensive pattern for FC Barcelona based on the match analysis provided, as it only comprises a single instance. However, examining the defensive actions initiated by the team, we can derive insights into their tactical mechanism. The team's behavior appears to do with their approach to pressing, attempting to create overloads in specific areas of the pitch when the opposition possesses the ball. A close observation of player positioning and compactness suggests an effort to maintain zonal integrity while exerting pressure on the ball carrier.\n\nTo enhance their defensive stability, coaching adjustments could focus on improving communication among players to ensure proper marking assignments during transitions. Additionally, reinforcing rest defense principles by ensuring that players are positioned to cover spaces and anticipate opponent movements would be vital in minimizing the risk of conceding high-quality chances. For now, further match data would be required to establish a more concrete defensive pattern."
   }
 ]

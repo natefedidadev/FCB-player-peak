@@ -1,168 +1,153 @@
-"""
-Data loader for FCB Player Peak — converts match files into pandas DataFrames.
-Uses kloppy for parsing Metrica Sports EPTS tracking and SportsCoding events.
+# data_loader.py
+from __future__ import annotations
 
-Three data sources per match:
-  *_pattern.xml         → events_df     (tactical phase annotations via kloppy.sportscode)
-  *_FifaData.xml +
-  *_FifaDataRawData.txt → tracking_df   (per-frame x/y/speed via kloppy.metrica EPTS)
-"""
-
+import glob
+import os
+import xml.etree.ElementTree as ET
 from pathlib import Path
-from kloppy import metrica, sportscode
+from typing import Optional
+
 import pandas as pd
+import json
+from pathlib import Path
 
 
 MATCHES_DIR = Path("matches")
 
 
 def list_matches(matches_dir: Path = MATCHES_DIR) -> list[str]:
-    """Return sorted list of match folder names."""
+    """
+    Returns match folder names under ./matches
+    """
     if not matches_dir.exists():
         return []
-    return sorted(d.name for d in matches_dir.iterdir() if d.is_dir())
+    return sorted([p.name for p in matches_dir.iterdir() if p.is_dir()])
 
 
-def _match_path(match: str | int, matches_dir: Path = MATCHES_DIR) -> Path:
-    """Resolve a match name or index to its folder path."""
-    if isinstance(match, int):
-        names = list_matches(matches_dir)
-        return matches_dir / names[match]
-    return matches_dir / match
-
-
-def _find_file(match_path: Path, pattern: str) -> Path:
-    """Find a single file matching a glob pattern in a match folder."""
-    files = list(match_path.glob(pattern))
-    if not files:
-        raise FileNotFoundError(f"No {pattern} in {match_path}")
-    return files[0]
-
-
-# ---------------------------------------------------------------------------
-# Events (pattern.xml via kloppy sportscode)
-# ---------------------------------------------------------------------------
-
-def load_events(match: str | int, matches_dir: Path = MATCHES_DIR) -> pd.DataFrame:
+def _strip_ns(tag: str) -> str:
     """
-    Parse *_pattern.xml → DataFrame using kloppy sportscode.
-
-    Columns: code_id, period_id, timestamp, end_timestamp, code,
-             Team, Half, Type, Side, Direction of ball entry,
-             Max Players in the box, match_name
+    Removes XML namespace if present: {ns}Tag -> Tag
     """
-    mp = _match_path(match, matches_dir)
-    xml_file = _find_file(mp, "*_pattern.xml")
-    dataset = sportscode.load(str(xml_file))
-    df = dataset.to_df()
-    df["match_name"] = mp.name
-    return df.sort_values(["period_id", "timestamp"]).reset_index(drop=True)
+    if "}" in tag:
+        return tag.split("}", 1)[1]
+    return tag
 
 
-def get_halftime_offset(events_df: pd.DataFrame) -> pd.Timedelta:
-    """Return the gap to subtract from 2nd half timestamps for display purposes.
-    Raw data stays untouched — use this only when formatting times for humans."""
-    SECOND_HALF_START = pd.Timedelta(minutes=45)
-    h2 = events_df[events_df["Half"] == "2nd Half"]
-    if h2.empty:
-        return pd.Timedelta(0)
-    return h2["timestamp"].min() - SECOND_HALF_START
-
-
-# ---------------------------------------------------------------------------
-# Tracking (FifaData.xml + FifaDataRawData.txt via kloppy metrica EPTS)
-# ---------------------------------------------------------------------------
-
-def load_tracking(
-    match: str | int,
-    matches_dir: Path = MATCHES_DIR,
-    sample_rate: float | None = None,
-    limit: int | None = None,
-) -> pd.DataFrame:
+def _find_pattern_xml(match_dir: Path) -> Optional[Path]:
     """
-    Parse tracking data via kloppy metrica EPTS → DataFrame.
-
-    Uses *_FifaData.xml (metadata) + *_FifaDataRawData.txt (raw positions).
-
-    Columns: period_id, timestamp, frame_id, ball_x/y/z/speed,
-             <player_id>_x, <player_id>_y, <player_id>_d, <player_id>_s
-             for each player track.
-
-    Args:
-        sample_rate: Downsample to this frame rate (e.g. 5.0 for 5fps instead of 25fps).
-        limit: Only load the first N frames.
+    Finds the *_pattern.xml file inside a match folder.
     """
-    mp = _match_path(match, matches_dir)
-    meta_file = _find_file(mp, "*_FifaData.xml")
-    raw_file = _find_file(mp, "*_FifaDataRawData.txt")
-    dataset = metrica.load_tracking_epts(
-        meta_data=str(meta_file),
-        raw_data=str(raw_file),
-        sample_rate=sample_rate,
-        limit=limit,
-    )
-    df = dataset.to_df()
-    df["match_name"] = mp.name
+    candidates = glob.glob(str(match_dir / "*_pattern.xml"))
+    if not candidates:
+        return None
+    return Path(candidates[0])
+
+
+def load_events(match_name: str, matches_dir: Path = MATCHES_DIR) -> pd.DataFrame:
+    """
+    Loads events from the match's *_pattern.xml.
+
+    Output columns (minimum needed by the rest of your pipeline):
+      - match
+      - code
+      - team
+      - timestamp   (pd.Timedelta)
+      - end_timestamp (pd.Timedelta)
+      - start_s, end_s (float seconds)
+      - half (optional string if present)
+    """
+    match_dir = matches_dir / match_name
+    if not match_dir.exists():
+        raise FileNotFoundError(f"Missing match folder: {match_dir}")
+
+    pattern_path = _find_pattern_xml(match_dir)
+    if pattern_path is None:
+        raise FileNotFoundError(f"Missing *_pattern.xml in: {match_dir}")
+
+    tree = ET.parse(pattern_path)
+    root = tree.getroot()
+
+    rows: list[dict] = []
+
+    # The file structure you showed uses <instance> ... </instance>
+    for inst in root.iter():
+        if _strip_ns(inst.tag) != "instance":
+            continue
+
+        start_s = None
+        end_s = None
+        code = None
+        team = None
+        half = None
+
+        for child in list(inst):
+            tag = _strip_ns(child.tag)
+            text = (child.text or "").strip()
+
+            if tag == "start":
+                try:
+                    start_s = float(text)
+                except ValueError:
+                    start_s = None
+            elif tag == "end":
+                try:
+                    end_s = float(text)
+                except ValueError:
+                    end_s = None
+            elif tag == "code":
+                code = text
+            elif tag == "label":
+                # labels look like:
+                # <label><text>FC Barcelona</text><group>Team</group></label>
+                label_text = None
+                label_group = None
+                for lab_child in list(child):
+                    lab_tag = _strip_ns(lab_child.tag)
+                    lab_val = (lab_child.text or "").strip()
+                    if lab_tag == "text":
+                        label_text = lab_val
+                    elif lab_tag == "group":
+                        label_group = lab_val
+
+                if label_group == "Team":
+                    team = label_text
+                elif label_group == "Half":
+                    half = label_text
+
+        # Keep only valid timed instances
+        if start_s is None or end_s is None or code is None:
+            continue
+
+        rows.append(
+            {
+                "match": match_name,
+                "code": code,
+                "team": team or "N/A",
+                "half": half,
+                "start_s": float(start_s),
+                "end_s": float(end_s),
+                "timestamp": pd.to_timedelta(start_s, unit="s"),
+                "end_timestamp": pd.to_timedelta(end_s, unit="s"),
+            }
+        )
+
+    df = pd.DataFrame(rows)
+    if df.empty:
+        raise ValueError(f"No <instance> events parsed from: {pattern_path}")
+
+    df = df.sort_values("timestamp").reset_index(drop=True)
     return df
 
-
-def load_tracking_dataset(
-    match: str | int,
-    matches_dir: Path = MATCHES_DIR,
-    sample_rate: float | None = None,
-    limit: int | None = None,
-):
+def load_team_map(match_parsed_dir: Path) -> dict:
     """
-    Load tracking as a kloppy TrackingDataset object (not a DataFrame).
-    Useful when you need access to metadata, teams, players, pitch dimensions, etc.
+    Load team_map.json from a parsed match folder (created by tracking_batch_parser.py).
+    Returns {} if missing or invalid.
     """
-    mp = _match_path(match, matches_dir)
-    meta_file = _find_file(mp, "*_FifaData.xml")
-    raw_file = _find_file(mp, "*_FifaDataRawData.txt")
-    return metrica.load_tracking_epts(
-        meta_data=str(meta_file),
-        raw_data=str(raw_file),
-        sample_rate=sample_rate,
-        limit=limit,
-    )
-
-
-# ---------------------------------------------------------------------------
-# Convenience: load everything for a match
-# ---------------------------------------------------------------------------
-
-def load_match(
-    match: str | int,
-    matches_dir: Path = MATCHES_DIR,
-    sample_rate: float | None = None,
-    tracking_limit: int | None = None,
-) -> dict:
-    """
-    Load all data for a match. Returns dict with:
-      events_df     — tactical phase annotations (DataFrame)
-      tracking_df   — per-frame positions (DataFrame)
-      dataset       — kloppy TrackingDataset (for metadata/teams/players)
-    """
-    dataset = load_tracking_dataset(match, matches_dir, sample_rate, tracking_limit)
-    return {
-        "events_df": load_events(match, matches_dir),
-        "tracking_df": dataset.to_df(),
-        "dataset": dataset,
-    }
-
-
-if __name__ == "__main__":
-    matches = list_matches()
-    print(f"Found {len(matches)} matches:\n")
-    for i, m in enumerate(matches):
-        print(f"  [{i}] {m}")
-
-    if matches:
-        print(f"\nLoading match 0: {matches[0]}")
-        events = load_events(0)
-        ds = load_tracking_dataset(0, limit=10)
-        print(f"  Events: {len(events)} rows, codes: {events['code'].nunique()}")
-        print(f"  Frame rate: {ds.metadata.frame_rate}")
-        print(f"  Pitch: {ds.metadata.pitch_dimensions.pitch_length}x{ds.metadata.pitch_dimensions.pitch_width}")
-        for team in ds.metadata.teams:
-            print(f"  Team: {team.name} ({len(team.players)} players)")
+    try:
+        p = Path(match_parsed_dir) / "team_map.json"
+        if not p.exists():
+            return {}
+        with open(p, "r", encoding="utf-8") as f:
+            return json.load(f) or {}
+    except Exception:
+        return {}
