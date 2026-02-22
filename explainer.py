@@ -92,23 +92,32 @@ def _postprocess_pattern(text: str) -> str:
 def _postprocess_moment(text: str) -> str:
     """
     Enforce:
-    - 3–5 sentences
-    - No bullets or numbering
+    - Preserve three-part structure (Context, Defensive Error, Coach Note)
     - No timestamps
+    - Clean up excess whitespace
     """
     t = (text or "").strip()
-    t = _remove_bullets_and_numbering(t)
     t = _strip_timestamps(t)
 
-    parts = re.split(r"(?<=[.!?])\s+", t)
-    parts = [p.strip() for p in parts if p.strip()]
+    # Normalize whitespace but preserve the structure
+    lines = [line.strip() for line in t.split('\n')]
+    lines = [line for line in lines if line]  # Remove empty lines
 
-    if len(parts) < 3:
-        return " ".join(parts)
-    if len(parts) > 5:
-        parts = parts[:5]
+    # Rejoin with double newlines between sections for readability
+    result = []
+    for line in lines:
+        if line.startswith(('Context:', 'Defensive Error:', 'Coach Note:')):
+            if result:  # Add spacing before new section (except first)
+                result.append('')
+            result.append(line)
+        else:
+            # Continuation of previous section
+            if result:
+                result[-1] += ' ' + line
+            else:
+                result.append(line)
 
-    return " ".join(parts).strip()
+    return '\n'.join(result).strip()
 
 # -------------------------
 # Prompting
@@ -116,26 +125,35 @@ def _postprocess_moment(text: str) -> str:
 
 SYSTEM_PROMPT_MOMENT = (
     "You are a football tactical analyst working with FC Barcelona's coaching staff.\n"
-    "We are coaching FC Barcelona’s defensive phase.\n"
+    "We are coaching FC Barcelona's defensive phase.\n"
     "Treat Barcelona as the defending team in the danger window (do not flip teams).\n"
     "You are given event-code tags and (optionally) a tracking/spatial summary computed from tracking data.\n\n"
+    "OUTPUT FORMAT (REQUIRED):\n"
+    "You must structure your response in exactly three sections:\n"
+    "Context: [3-5 sentences providing detailed description of what happened in this event]\n\n"
+    "Defensive Error: [3-5 sentences with in-depth analysis of what went wrong with the defending]\n\n"
+    "Coach Note: [3-5 sentences with specific, actionable tactical suggestions on what to fix]\n\n"
     "HARD RULES (must follow):\n"
     "- Do NOT mention or infer timestamps, minutes, or match clock.\n"
     "- Do NOT write bullet points or numbered lists.\n"
-    "- Write EXACTLY 3–5 sentences.\n"
-    "- Be tactically specific and actionable for coaches.\n"
-    "- Do not invent details beyond the provided event codes and tracking evidence.\n"
-    "- When referencing dynamics, cite the exact event tags in [BRACKETS] (e.g., [DEFENSIVE TRANSITION]).\n\n"
+    "- NEVER mention specific unit measurements (e.g., '0.04 units') - use qualitative terms only.\n"
+    "- NEVER use bracketed tags like [DEFENSIVE TRANSITION] - write naturally.\n"
+    "- NEVER reference 'event codes' or mention the data sources - explain as if you witnessed the play.\n"
+    "- Use common sense - if tracking shows 10v11, it's a LOCAL overload near the ball, NOT the whole team.\n"
+    "- Be REALISTIC - focus on tactically relevant insights, not literal data interpretation.\n"
+    "- When tactically relevant, mention player numbers (e.g., 'the number 5 lost his marker', 'number 9 exploited space').\n"
+    "- Only reference player numbers when it adds value to the tactical explanation - don't force it.\n"
+    "- Each section should be 3-5 sentences with practical tactical analysis.\n"
+    "- Write as a coach explaining to another coach - natural, fluent, tactical language.\n\n"
     "INTERPRETATION RULES (grounding):\n"
-    "- Only claim a 'ball-side overload' if attackers > defenders within the stated radius.\n"
-    "- If attackers==0 and defenders==0 within the radius, say there is 'no crowding near the ball within the radius'.\n"
-    "- Only claim a 'numerical disadvantage' near the ball if attackers > defenders within the radius.\n"
-    "- For nearest distance to ball (normalized units 0..1):\n"
-    "  * <=0.05: very tight\n"
-    "  * <=0.12: close\n"
-    "  * <=0.25: moderate\n"
-    "  * >0.25: far\n"
-    "- If tracking_coverage_warning is true or either team has <6 tracked players, explicitly say tracking coverage is limited.\n"
+    "- Numerical situations: ALWAYS describe overloads and transitions using tactical numbers (e.g., '4 on 2', '3 v 1', '5 on 3').\n"
+    "- Use 'on' or 'v' format: '4 on 2 situation', '3 v 1 disadvantage', '2 on 1 break'.\n"
+    "- Ball-side overload: Focus on LOCAL numerical advantage near the ball (typically realistic numbers like 2v1, 3v2, 4v2).\n"
+    "- Defensive compactness: Describe team shape and spacing in tactical terms.\n"
+    "- Distance to ball: Use qualitative terms ONLY (tight pressure, close, moderate distance, far).\n"
+    "- Player counts: If tracking shows unusual numbers (>8 defenders or attackers), it's likely a data artifact - use realistic tactical numbers instead.\n"
+    "- If tracking_coverage_warning is true, mention limited tracking data and rely more on event codes.\n"
+    "- Prioritize actionable tactical insights over technical data details.\n"
 )
 
 SYSTEM_PROMPT_PATTERN = (
@@ -270,18 +288,22 @@ def build_moment_prompt(
         f"Outcome: {outcome}\n"
         f"{tracking_block}\n\n"
         "Task:\n"
-        "Explain what went wrong defensively in this passage of play. "
-        "What tactical patterns led to this danger moment, and what should the coaching staff address?\n\n"
+        "Provide an IN-DEPTH tactical analysis of this danger moment using the three-part structure:\n"
+        "1. Context: Describe what happened in this passage of play with specific details from the event codes.\n"
+        "2. Defensive Error: Explain precisely what went wrong with Barcelona's defending - be specific about positioning, pressure, transitions, spacing, etc.\n"
+        "3. Coach Note: Provide detailed, actionable tactical adjustments the coaching staff should implement.\n\n"
         "Constraints:\n"
-        "- 3–5 sentences.\n"
+        "- MUST use the format: 'Context: ...\\n\\nDefensive Error: ...\\n\\nCoach Note: ...'\n"
+        "- Each section: 3-5 sentences with PRACTICAL, ACTIONABLE analysis.\n"
+        "- Write NATURALLY - as if explaining to a coach based on what you observed.\n"
+        "- NEVER use bracketed event tags - explain in plain tactical language.\n"
+        "- NEVER say 'based on event codes' or reference data sources - just explain what happened.\n"
+        "- NEVER mention unit measurements - describe distances qualitatively (tight, close, moderate, far).\n"
+        "- When tactically relevant, reference player numbers (e.g., 'the number 5', 'their number 9') - but only when it adds tactical value.\n"
         "- No timestamps (do not write times like 80:16 or 1:20).\n"
-        "- No bullet points.\n"
-        "- If you use bracketed tags like [DEFENSIVE TRANSITION], ONLY use tags that appear in 'Active event codes during peak'.\n"
-        "- Interpretation rules: only claim a ball-side overload or numerical disadvantage near the ball if attackers > defenders within the given radius; if both are 0, say there is no crowding within the radius.\n"
-        "- Distance language rules (nearest distance to ball): <=0.05 very tight, <=0.12 close, <=0.25 moderate, >0.25 far.\n"
-        "- If tracking_coverage_warning is true or either team has <6 tracked players, explicitly say tracking coverage is limited.\n"
-        "- Ground claims in the provided event codes and the tracking/spatial evidence (if present). "
-        "If tracking evidence is missing or unclear, say so rather than guessing.\n"
+        "- No bullet points or numbered lists.\n"
+        "- Ball-side overload: Describe LOCAL advantage near the ball (2v1, 3v2, etc.), not whole-team counts.\n"
+        "- Be realistic and coach-friendly - focus on what matters tactically.\n"
     )
 
     return prompt

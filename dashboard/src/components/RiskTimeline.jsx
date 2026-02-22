@@ -14,6 +14,7 @@ const SEVERITY_COLORS = {
   critical: "#ef4444",
   high: "#f97316",
   moderate: "#eab308",
+  low: "#22c55e",
 };
 
 function CustomTooltip({ active, payload }) {

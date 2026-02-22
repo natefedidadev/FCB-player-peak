@@ -12,6 +12,8 @@ from data_loader import list_matches, load_events, get_halftime_offset
 from risk_engine import compute_risk_score
 from danger_detector import detect_danger_moments
 from explainer import explain_moment, explain_window
+from tracking_features import summarize_window, load_team_map
+from pathlib import Path
 
 app = FastAPI(title="FCB Defensive Risk Analysis")
 
@@ -86,6 +88,49 @@ def _extract_opponent(events_df):
             return t
     return "Opponent"
 
+def _load_tracking_data(match_name: str):
+    """
+    Load tracking data for a match if available.
+    Returns (player_df, ball_df, team_map) or (None, None, {}) if unavailable.
+    """
+    parsed_dir = Path("parsed") / match_name
+    if not parsed_dir.exists():
+        return None, None, {}
+
+    player_csv = parsed_dir / "player_positions.csv"
+    ball_csv = parsed_dir / "ball_positions.csv"
+
+    if not player_csv.exists():
+        return None, None, {}
+
+    try:
+        player_df = pd.read_csv(player_csv)
+        ball_df = pd.read_csv(ball_csv) if ball_csv.exists() else None
+        team_map = load_team_map(parsed_dir)
+        return player_df, ball_df, team_map
+    except Exception as e:
+        print(f"Warning: Failed to load tracking data for {match_name}: {e}")
+        return None, None, {}
+
+def _get_defending_attacking_ids(team_map: dict, opponent: str):
+    """
+    Determine team IDs for defending (Barça) and attacking (opponent) teams.
+    Returns (defending_team_id, attacking_team_id).
+
+    team_map structure: {
+        'barca_team_id': str,
+        'opponent_team_id': str,
+        'team_id_to_name': dict,
+        'barca_name': str,
+        'opponent_name': str
+    }
+    """
+    # team_map is already structured with the IDs we need
+    barca_id = team_map.get('barca_team_id')
+    opponent_id = team_map.get('opponent_team_id')
+
+    return str(barca_id) if barca_id else None, str(opponent_id) if opponent_id else None
+
 
 @app.get("/api/matches")
 def get_matches():
@@ -135,6 +180,10 @@ def get_dangers(index: int):
     match_name = matches[index]
     opponent = _extract_opponent(events_df)
 
+    # Load tracking data if available
+    player_df, ball_df, team_map = _load_tracking_data(match_name)
+    defending_id, attacking_id = _get_defending_attacking_ids(team_map, opponent)
+
     results = []
     for d in dangers:
         peak_s = d["peak"]["time_s"]
@@ -145,7 +194,24 @@ def get_dangers(index: int):
         window_start_display = _apply_offset(win_start, offset_sec, h2_start_sec)
         window_end_display   = _apply_offset(win_end,   offset_sec, h2_start_sec)
 
-        explanation = explain_moment(d, match_name, opponent)
+        # Generate tracking summary if data available
+        tracking_summary = None
+        if player_df is not None and not player_df.empty:
+            try:
+                tracking_summary = summarize_window(
+                    player_df,
+                    ball_df,
+                    win_start,
+                    win_end,
+                    defending_team_id=defending_id,
+                    attacking_team_id=attacking_id,
+                    preferred_time_s=peak_s,
+                )
+            except Exception as e:
+                print(f"Warning: Failed to generate tracking summary: {e}")
+                tracking_summary = None
+
+        explanation = explain_moment(d, match_name, opponent, tracking_summary=tracking_summary)
 
         results.append({
             "peak_time": peak_s,

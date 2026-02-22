@@ -10,12 +10,14 @@ const SEVERITY_COLORS = {
   critical: "border-red-500/30 bg-red-500/10",
   high: "border-orange-500/30 bg-orange-500/10",
   moderate: "border-yellow-500/30 bg-yellow-500/10",
+  low: "border-green-500/30 bg-green-500/10",
 };
 
 const SEVERITY_DOT = {
   critical: "bg-red-500",
   high: "bg-orange-500",
   moderate: "bg-yellow-500",
+  low: "bg-green-500",
 };
 
 function ArrowButton({ direction, onClick }) {
