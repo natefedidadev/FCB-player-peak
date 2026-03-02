@@ -262,10 +262,32 @@ def compute_risk_score(events_df: pd.DataFrame, config: RiskConfig = RiskConfig(
     Returns dataframe with:
       - time_s
       - raw_score
-      - risk_score (0-100 scaled)
+      - risk_score (0-100 scaled, ABSOLUTE scale)
       - active_event_codes (list)
+
+    Fixes:
+    - Removes per-match min/max normalization (which caused random 100/100 spikes).
+    - Forces OPPONENT GOAL events (goals conceded) to spike to 100/100.
+    - Clamps implausible event times that can push peaks past the match end.
     """
     events_cleaned = _clean_events(events_df)
+
+    # -----------------------------
+    # 1) Clamp event times (guards)
+    # -----------------------------
+    CLAMP_MATCH_MAX_S = 95 * 60  # 95:00 (tune if you want 100/105)
+    if events_cleaned is not None and not events_cleaned.empty:
+        events_cleaned = events_cleaned.copy()
+        events_cleaned["Start"] = pd.to_numeric(events_cleaned["Start"], errors="coerce")
+        events_cleaned["End"] = pd.to_numeric(events_cleaned["End"], errors="coerce")
+        events_cleaned = events_cleaned[np.isfinite(events_cleaned["Start"]) & np.isfinite(events_cleaned["End"])].copy()
+
+        events_cleaned["Start"] = events_cleaned["Start"].clip(lower=0.0, upper=float(CLAMP_MATCH_MAX_S))
+        events_cleaned["End"] = events_cleaned["End"].clip(lower=0.0, upper=float(CLAMP_MATCH_MAX_S))
+
+        bad = events_cleaned["End"] < events_cleaned["Start"]
+        if bad.any():
+            events_cleaned.loc[bad, "End"] = events_cleaned.loc[bad, "Start"]
 
     time_grid = _build_time_grid(events_cleaned, dt_s=config.dt_s)
 
@@ -276,21 +298,83 @@ def compute_risk_score(events_df: pd.DataFrame, config: RiskConfig = RiskConfig(
         barca_weights=BARCA_EVENT_WEIGHTS,
     )
 
-    # Smooth
+    # -----------------------------
+    # 2) Smooth raw risk
+    # -----------------------------
     window_n = max(1, int(round(config.smooth_window_s / config.dt_s)))
     raw_smooth = _smooth(raw_scores, window_n=window_n)
 
-    # Convert to 0-100 with a simple scaling
-    # (You can change this later — it’s just a stable default)
-    # Shift so min is 0
-    shifted = raw_smooth - np.nanmin(raw_smooth) if len(raw_smooth) else raw_smooth
-    maxv = float(np.nanmax(shifted)) if len(shifted) else 1.0
-    if not np.isfinite(maxv) or maxv <= 1e-9:
-        scaled = np.zeros_like(shifted)
-    else:
-        scaled = (shifted / maxv) * 100.0
+    # -----------------------------
+    # 3) ABSOLUTE scaling (no per-match normalization)
+    # -----------------------------
+    TOP_K = 6
+    opp_top = sorted([float(v) for v in OPPONENT_EVENT_WEIGHTS.values()], reverse=True)[:TOP_K]
+    bar_top = sorted([float(v) for v in BARCA_EVENT_WEIGHTS.values()], reverse=True)[:TOP_K]
+    abs_max = float(sum(opp_top) + sum(bar_top))
+    if not np.isfinite(abs_max) or abs_max <= 1e-9:
+        abs_max = 1.0
 
+    raw_pos = np.clip(raw_smooth, 0.0, None)
+    scaled = (raw_pos / abs_max) * 100.0
     scaled = np.clip(scaled, config.clamp_min, config.clamp_max)
+
+    # -----------------------------
+    # 4) Force OPPONENT GOAL spikes to 100 (goals conceded)
+    # -----------------------------
+    GOAL_SPIKE_RADIUS_S = 3.0  # +/- seconds around the goal timestamp
+    GOAL_CODE_KEYWORDS = ("goal",)  # case-insensitive substring match
+
+    # Names we will treat as Barça if the "Team" field is a string label
+    BARCA_NAMES = {"fc barcelona", "barcelona", "barça", "fcb"}
+
+    if events_cleaned is not None and not events_cleaned.empty and len(time_grid):
+        codes = events_cleaned["Code"].astype(str).str.lower()
+        is_goal_code = codes.apply(lambda s: any(k in s for k in GOAL_CODE_KEYWORDS))
+
+        # Find a usable team column
+        team_col = None
+        for candidate in ["Team", "team", "team_name", "TeamName"]:
+            if candidate in events_cleaned.columns:
+                team_col = candidate
+                break
+
+        if team_col is not None and is_goal_code.any():
+            teams = events_cleaned[team_col].astype(str).str.lower().str.strip()
+
+            is_known_team = (teams != "") & (teams != "n/a") & (teams != "na") & (teams != "none")
+            is_barca_team = teams.isin(BARCA_NAMES)
+
+            # Only spike opponent goals (goals conceded by Barça)
+            is_opponent_goal = is_goal_code & is_known_team & (~is_barca_team)
+
+            if is_opponent_goal.any():
+                g_start = pd.to_numeric(events_cleaned.loc[is_opponent_goal, "Start"], errors="coerce")
+                g_end   = pd.to_numeric(events_cleaned.loc[is_opponent_goal, "End"], errors="coerce")
+
+                # Prefer End (often closer to the actual goal moment), else midpoint, else Start
+                goal_times = np.where(
+                    np.isfinite(g_end.to_numpy()),
+                    g_end.to_numpy(),
+                    np.where(
+                        np.isfinite(((g_start + g_end) / 2).to_numpy()),
+                        ((g_start + g_end) / 2).to_numpy(),
+                        g_start.to_numpy()
+                    )
+                )
+
+                for gt in goal_times:
+                    if not np.isfinite(gt):
+                        continue
+                    mask = np.abs(time_grid - float(gt)) <= GOAL_SPIKE_RADIUS_S
+                    if not mask.any():
+                        continue
+
+                    scaled[mask] = config.clamp_max  # force 100 for conceded goals
+                    raw_smooth[mask] = np.maximum(raw_smooth[mask], abs_max)
+
+                    idxs = np.where(mask)[0]
+                    for i in idxs:
+                        active_events[i].append("GOAL_CONCEDED")
 
     out = pd.DataFrame(
         {

@@ -282,22 +282,22 @@ def build_moment_prompt(
     prompt = (
         f"Match: {match_name}\n"
         f"Opponent: {opponent}\n"
-        f"Danger window: {_fmt_s(start_s)} - {_fmt_s(end_s)} (peak at {_fmt_s(peak_t)})\n"
+        f"Danger window duration: {_fmt_s(start_s)} - {_fmt_s(end_s)} (peak at {_fmt_s(peak_t)})\n"
         f"Risk score at peak: { _fmt_score(peak_score) }/100 (severity: {severity})\n"
-        f"Active event codes during peak: {codes_str}\n"
+        f"Tactical situation: {codes_str}\n"
         f"Outcome: {outcome}\n"
         f"{tracking_block}\n\n"
         "Task:\n"
         "Provide an IN-DEPTH tactical analysis of this danger moment using the three-part structure:\n"
-        "1. Context: Describe what happened in this passage of play with specific details from the event codes.\n"
+        "1. Context: Describe what happened in this passage of play as if you witnessed it.\n"
         "2. Defensive Error: Explain precisely what went wrong with Barcelona's defending - be specific about positioning, pressure, transitions, spacing, etc.\n"
         "3. Coach Note: Provide detailed, actionable tactical adjustments the coaching staff should implement.\n\n"
         "Constraints:\n"
         "- MUST use the format: 'Context: ...\\n\\nDefensive Error: ...\\n\\nCoach Note: ...'\n"
         "- Each section: 3-5 sentences with PRACTICAL, ACTIONABLE analysis.\n"
-        "- Write NATURALLY - as if explaining to a coach based on what you observed.\n"
-        "- NEVER use bracketed event tags - explain in plain tactical language.\n"
-        "- NEVER say 'based on event codes' or reference data sources - just explain what happened.\n"
+        "- Write NATURALLY - as if explaining to a coach what you saw on the pitch.\n"
+        "- NEVER name or quote any of the tactical situation labels - translate them into plain football language.\n"
+        "- NEVER say 'event codes', 'codes', 'tags', or reference data sources.\n"
         "- NEVER mention unit measurements - describe distances qualitatively (tight, close, moderate, far).\n"
         "- When tactically relevant, reference player numbers (e.g., 'the number 5', 'their number 9') - but only when it adds tactical value.\n"
         "- No timestamps (do not write times like 80:16 or 1:20).\n"
@@ -396,8 +396,8 @@ def build_pattern_prompt(pattern: dict) -> str:
     {json.dumps(anchor, ensure_ascii=False)}
 
     Write:
-    Explain the tactical mechanism behind THIS specific event-code combo, what usually triggers it, and one or two coaching adjustments.
-    Explicitly reference at least TWO of the provided event codes by name in your explanation.
+    Explain the tactical mechanism behind this pattern, what usually triggers it, and one or two coaching adjustments.
+    Describe the situation in plain football language - NEVER quote or name the event code labels directly.
     If match_count is 0 or 1, explicitly say there is not enough evidence to call it recurring yet.
     """.strip()
 

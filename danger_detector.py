@@ -145,6 +145,7 @@ def detect_danger_moments(
                 },
                 "severity": severity,
                 "active_event_codes": active_codes,
+                "resulted_in_goal": "GOAL_CONCEDED" in active_codes,
             }
         )
 
